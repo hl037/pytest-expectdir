@@ -1,6 +1,10 @@
 # pytest-expectdir
 
-This pytest plugin provide an easy way to test file generation and filesystem transformation.
+![tests](https://github.com/hl037/pytest-expectdir/actions/workflows/tests.yml/badge.svg)
+[![codecov](https://codecov.io/github/hl037/pytest-expectdir/branch/master/graph/badge.svg?token=IEML9TAP59)](https://codecov.io/github/hl037/pytest-expectdir)
+
+
+This pytest plugin provides an easy way to test file generation and file-system transformation.
 
 ## Install
 
@@ -12,7 +16,7 @@ pip install pytest-expectdir
 
 Here is the workflow :
 
-Create a directory withour expected generated files and directories, and optionaly one with your initial data so that it looks like this :
+Create a directory containing files and directories expected to be generated, and optionally one with your initial data so that it looks like this :
 
 ```
 my_pkg/
@@ -39,9 +43,9 @@ def test_feature(expectdir):
   # ...And you get a fancy report of the difference if there are (as an AssertionError).
 ```
 
-Note that you can also pass manually the keyword arguments `initial` and `expected` to `expectdir` if, for example, you have multiple tests ending up with the same expected result, or with the same initial one.
+Note that you can also pass manually the keyword arguments `initial` and `expected` to `expectdir`. If, for example, you have multiple tests ending up with the same expected result, or with the same initial one.
 
-This is equivalent to the previous example : 
+The following is equivalent to the previous example : 
 
 ```
 def test_feature(expectdir):

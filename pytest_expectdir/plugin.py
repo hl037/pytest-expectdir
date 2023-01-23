@@ -119,10 +119,13 @@ class ExpectDir(object):
       expected = Path(expected)
     
     tmpdir = self.tmp_path / 'candidate'
+    tmpdir.parent.mkdir(parents=True, exist_ok=True)
     if initial :
       shutil.copytree(
         _win32_longpath(str(self.cwd / initial)), _win32_longpath(str(tmpdir))
       )
+    else :
+      tmpdir.mkdir()
     try :
       yield tmpdir
     except :
