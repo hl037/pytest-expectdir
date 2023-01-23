@@ -24,8 +24,8 @@ if sys.version_info < (3,):
 
 setup(
     name='pytest-expectdir',
-    version='0.1.dev0',
-    description='',
+    version='1.0',
+    description='A pytest plugin to provide initial/expected directories, and check a test transforms the initial directory to the expected one',
     long_description=LONG_DESC,
     long_description_content_type='text/markdown',
     author='Léo Falventin Hauchecorne',
@@ -41,7 +41,20 @@ setup(
     entry_points={
       "pytest11": ["pytest-expectdir = pytest_expectdir.plugin"],
     },
+    keywords="pytest test unittest directory file",
     python_requires=">=3.7",
-    classifiers=[],
+    classifiers=[
+      "Development Status :: 5 - Production/Stable",
+      "Intended Audience :: Developers",
+      "License :: OSI Approved :: MIT License",
+      "Operating System :: OS Independent",
+      "Programming Language :: Python :: 3.6",
+      "Programming Language :: Python :: 3.7",
+      "Programming Language :: Python :: 3.8",
+      "Programming Language :: Python :: 3.9",
+      "Programming Language :: Python :: 3.10",
+      "Topic :: Software Development :: Quality Assurance",
+      "Topic :: Software Development :: Testing",
+    ],
     **EXTRAS
 )
