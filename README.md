@@ -106,5 +106,5 @@ dir4/f3:
   + diff
 ```
 
-![Preview Image](https://github.com/hl037/pytest-expectdir/screenshot.png)
+![Preview Image](https://github.com/hl037/pytest-expectdir/blob/master/screenshot.png?raw=true)
 
