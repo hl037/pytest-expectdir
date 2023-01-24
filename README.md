@@ -20,15 +20,15 @@ Create a directory containing files and directories expected to be generated, an
 
 ```
 my_pkg/
-  my_pkg/
-    ...
-  tests/
-    test_feature.py
-    data_test_feature/
-      initial/
-        ... (optional) your initial data
-      expected/
-        ... expected output tree
+├ my_pkg/
+│ └ ...
+└ tests/
+  ├ test_feature.py
+  └ test_feature/
+    ├ initial (optional)/
+    │ └ ... your initial data
+    └ expected/
+      └ ... expected output tree
 
 ```
 
@@ -37,7 +37,7 @@ Then you write your test as follow :
 `test_feature.py`
 ```
 def test_feature(expectdir):
-  with expectdir('data_test_feature') as output_dir:
+  with expectdir('test_feature') as output_dir:
     # Do whatever you want inside output_dir, which is a temporary directory copied from initial/
   # At the end of the with, output_dir gets compared with expected
   # ...And you get a fancy report of the difference if there are (as an AssertionError).
@@ -52,6 +52,69 @@ def test_feature(expectdir):
   with expectdir(initial='data_test_feature/initial', expected='data_test_feature/expected') as output_dir:
     # ...
 ```
+
+
+If your test data follows this schema :
+
+```
+tests/
+├ test_feature.py
+└ test_feature/
+  └ TestCaseClassName (if one)/
+    └ test_method
+      ├ initial (optional)/
+      │ └ ...
+      └ expected
+        └ ...
+```
+
+(like the first example), then you can even omit the parameters :
+
+```
+def test_feature(expectdir):
+  with expectdir() as output_dir:
+    # ...
+```
+
+## API
+
+### (`pytest.fixture`) `expectdir(datapath=None, *, initial=None, expected=None) -> contextmanager as outputDir:Path`
+
+The main fixture. Its value is a function that returns a context manager. The context manager will return (when opened) a path to a temporary directory that will get compared to the Expected directory at closing. An AssertionError will then be raised if the two directory are not the same. `.gitkeep` files, conventionally used to keep empty directories are ignored.
+
+The function choose an optional initial directory and a required expected directory as follow :
+
+#### Expected
+* If the `expected` keyword argument is provided, it's this directory that will be used.
+* Else, if the `datapath` positional argument is provided, expected will be `datapath/"expected"`.
+* Else, the test path will be used as fallback, i.e. `currentModuleDirectory/TestCaseClassName/test_method/expected` if inside a testCase class, else, `currentModuleDirectory/test_function/expected` if the test is a standalone function.
+* If the selected path does not exist, raises a FileNotFoundError.
+
+#### Initial
+* If the `initial` keyword argument is provided and equal to `__empty__`, then the initial directory will be empty.
+* If the `initial` keyword argument is provided and is a different string or a `Path` instance, it's this directory that will be used.
+* Else, if the `datapath` positional argument is provided, expected will be `datapath/"initial"`.
+* Else, if the `expected` keyword argument is **not** provided, the test path will be used as fallback, i.e. `currentModuleDirectory/TestCaseClassName/test_method/initial` if inside a TestCase class, else, `currentModuleDirectory/test_function/initial` if the test is a standalone function.
+* Else, the initial directory will be empty.
+* If the initial keyword argument is a Path, and this path does not exists, raises a FileNotFoundError.
+
+### `cmpdir(candidate:Path, expected:Path) -> Tuple[result:bool, Tuple[candidate_only:list[Path], expected_only:list[Path], different:list[Path]]]`
+
+Compare two directories recursively, and list files only in the first, only on the second, and in both but different.
+
+The result is `True` if the directories are identical.
+
+When a subdirectory is present only in one of the compared directories, only the subdirectory itself is listed (not all its content).
+
+Files `.gitkeep` are ignored.
+
+### `formatDiff(file_output:TextIO, candidate:Path, expected:Path, diffRes:Tuple[candidate_only:list[Path], expected_only:list[Path], different:list[Path]]) -> None`
+
+Takes the result of `cmpdir`, and print to `file_output` the diff summary.
+
+### `formatFileDiff(file_output:TextIO, lines_candidate:Iterable[str], lines_expected:Iterable[str], context=3, indent='  ') -> None`
+
+Format the diff of two files, and output to `file_output`. `context` is the number of identical to show before and after insertion / deletion for context. `indent` is the line prefix, so that the output is indented.
 
 
 ## How Fancy ?

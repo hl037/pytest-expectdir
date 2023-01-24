@@ -45,6 +45,8 @@ sqlite*bk
 
 wsdata
 
+*coverage*
+
 htmlcov
 .coverage
 build
