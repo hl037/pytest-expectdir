@@ -97,28 +97,45 @@ class ExpectDir(object):
   """
   Class to handle the teardown, and the assertions
   """
+  EMPTY = '__empty__'
   def __init__(self, tmp_path:Path, request):
     self.tmp_path = tmp_path
-    self.cwd = Path(request.module.__file__).parent
+    currentFile = Path(request.module.__file__)
+    self.cwd = currentFile.parent
+    self.fallback = Path(currentFile.stem)
+    if request.cls :
+      self.fallback = self.fallback / request.cls.__name__
+    if request.function :
+      self.fallback = self.fallback / request.function.__name__
+    self.current = -1
 
   @contextmanager
   def __call__(self, datapath=None, initial=None, expected=None):
-    if not initial :
-      if datapath is None :
-        initial = None
-      else :
-        initial = Path(datapath) / "initial"
-        if not (self.cwd / initial).is_dir() :
-          initial = None
-    else :
-      initial = Path(initial)
+    self.current += 1
     if not expected :
-      assert datapath is not None
+      if not datapath :
+        datapath = self.fallback
       expected = Path(datapath) / "expected"
     else :
       expected = Path(expected)
+      if not initial and not datapath :
+        initial = ExpectDir.EMPTY
+    if not (self.cwd / expected).is_dir() :
+      raise FileNotFoundError(f'{self.cwd / expected} (as expected directory for expectdir) is not a directory ')
+      
+    if not initial :
+      initial = Path(datapath) / "initial"
+      if not (self.cwd / initial).is_dir() :
+        initial = None
+    elif initial == ExpectDir.EMPTY :
+      initial = None
+    else :
+      initial = Path(initial)
+      if not (self.cwd / initial).is_dir() :
+        raise FileNotFoundError(f'{self.cwd / initial} (as initial directory for expectdir) is not a directory whereas it has been passed explicitely as kwarg.')
+        
     
-    tmpdir = self.tmp_path / 'candidate'
+    tmpdir = self.tmp_path / f'candidate{self.current}'
     tmpdir.parent.mkdir(parents=True, exist_ok=True)
     if initial :
       shutil.copytree(
@@ -142,3 +159,24 @@ class ExpectDir(object):
 @pytest.fixture
 def expectdir(tmp_path, request):
   return ExpectDir(tmp_path, request)
+
+class _WrapperException(Exception):
+  """
+  A wrapper to re-raise the exact exception
+  """
+  def __init__(self, original:Exception, tb):
+    self.original = original
+    self.tb = tb
+
+@pytest.fixture
+def auto_expectdir(expectdir):
+  try :
+    with expectdir() as tmpdir :
+      try :
+        yield tmpdir
+      except Exception as e:
+        raise _WrapperException(e, sys.exc_info()[2])
+  except _WrapperException as we:
+    raise we.original.with_traceback(we.tb)
+  except AssertionError as e:
+    pytest.fail(msg=e.args[0])
