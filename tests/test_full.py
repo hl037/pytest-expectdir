@@ -17,14 +17,14 @@ def test_no_error(expectdir):
 def test_no_initial_data_path(expectdir):
   with expectdir('data/test2') as tmpdir :
     tmp_path = expectdir.tmp_path
-    with open(tmpdir / 'f1') as f :
-      f.write('Hello1')
+    with open(tmpdir / 'f1', 'w') as f :
+      f.write('Hello1\n')
       
 def test_no_initial_expected(expectdir):
   with expectdir(expected='data/test2/expected') as tmpdir :
     tmp_path = expectdir.tmp_path
-    with open(tmpdir / 'f1') as f :
-      f.write('Hello1')
+    with open(tmpdir / 'f1', 'w') as f :
+      f.write('Hello1\n')
 
 def test_full_data_path(expectdir, request):
   tmp_path = None

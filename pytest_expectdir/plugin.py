@@ -146,7 +146,7 @@ class ExpectDir(object):
     try :
       yield tmpdir
     except :
-      pass
+      raise
     else :
       res, diffRes = cmpdir(tmpdir, self.cwd / expected)
       if res :
