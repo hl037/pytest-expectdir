@@ -1,6 +1,9 @@
 from pathlib import Path
 import pytest
 
+class CustomError(RuntimeError):
+  pass
+
 def test_imports():
   """Because coverage start after imports, lets write a dummy test to mark them as covered"""
   import sys
@@ -13,6 +16,10 @@ def test_no_error(expectdir):
   with expectdir('data/test1') :
     tmp_path = expectdir.tmp_path
   
+def test_forward_errors(expectdir):
+  with pytest.raises(CustomError) as excinfo :
+    with expectdir('data/test2') as tmpdir :
+      raise CustomError('This error should be raised instead of a directory comparison')
   
 def test_no_initial_data_path(expectdir):
   with expectdir('data/test2') as tmpdir :

@@ -24,7 +24,7 @@ if sys.version_info < (3,):
 
 setup(
     name='pytest-expectdir',
-    version='1.1.1',
+    version='1.1.2',
     description='A pytest plugin to provide initial/expected directories, and check a test transforms the initial directory to the expected one',
     long_description=LONG_DESC,
     long_description_content_type='text/markdown',

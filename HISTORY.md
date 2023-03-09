@@ -1,3 +1,5 @@
+# 1.1.2
+  Added unit test for full coverage
 # 1.1.1
   Fix Exception not forwarded
 # 1.1.0
