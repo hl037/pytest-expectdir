@@ -1,8 +1,7 @@
 # pytest-expectdir
 
 ![tests](https://github.com/hl037/pytest-expectdir/actions/workflows/tests.yml/badge.svg)
-[![codecov](https://codecov.io/github/hl037/pytest-expectdir/branch/master/graph/badge.svg?token=IEML9TAP59)](https://codecov.io/github/hl037/pytest-expectdir)
-
+[![codecov](https://codecov.io/gh/hl037/pytest-expectdir/branch/master/graph/badge.svg?token=IEML9TAP59)](https://codecov.io/gh/hl037/pytest-expectdir)
 
 This pytest plugin provides an easy way to test file generation and file-system transformation.
 
