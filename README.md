@@ -126,7 +126,7 @@ In [1]: import sys
    ...: initial = './tests/data/test3/initial/'
    ...: expected = './tests/data/test3/expected/'
    ...: formatDiff(sys.stdout, initial, expected, cmpdir(initial, expected)[1])
-Directories ./tests/data/test3/expected/ (expected) is different from ./tests/data/test3/initial/ (candidate).
+Directory ./tests/data/test3/expected/ (expected) is different from ./tests/data/test3/initial/ (candidate).
 Missing in candidate :
 dir3/
 f1

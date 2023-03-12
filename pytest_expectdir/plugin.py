@@ -66,7 +66,7 @@ def formatDiff(f:TextIO, candidate:Path, expected:Path, diffRes):
   left, right, diff = diffRes
   left = [ f'{p}{"/" if (candidate / p).is_dir() else ""}' for p in left ]
   right = [ f'{p}{"/" if (expected / p).is_dir() else ""}' for p in right ]
-  f.write(f'{CYAN}Directories {RED}{expected} (expected){CYAN} is different from {GREEN}{candidate} (candidate){CYAN}.\n')
+  f.write(f'{CYAN}Directory {RED}{expected} (expected){CYAN} is different from {GREEN}{candidate} (candidate){CYAN}.\n')
   if right :
     f.write(f'{RED}Missing in candidate :\n')
     f.write(''.join( f'{RED}{l}\n' for l in right ))

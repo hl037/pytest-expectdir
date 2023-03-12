@@ -1,3 +1,5 @@
+# 1.1.4
+  Fix typo
 # 1.1.3
   Fix Coverage.io badge in README
 # 1.1.2
