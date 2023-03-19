@@ -77,11 +77,13 @@ def test_feature(expectdir):
 
 ## API
 
-### (`pytest.fixture`) `expectdir(datapath=None, *, initial=None, expected=None) -> contextmanager as outputDir:Path`
+### (`pytest.fixture`) `expectdir(datapath=None, *, initial=None, expected=None, current_dir_replace_string=None) -> contextmanager as outputDir:Path`
 
 The main fixture. Its value is a function that returns a context manager. The context manager will return (when opened) a path to a temporary directory that will get compared to the Expected directory at closing. An AssertionError will then be raised if the two directory are not the same. `.gitkeep` files, conventionally used to keep empty directories are ignored.
 
-The function choose an optional initial directory and a required expected directory as follow :
+You also may require to the content of some file containing the path where the test is executed. Just before executing what is in the `with`, the string passed to `current_dir_replace_string` is replaced by temporary directory path in all files in `initial/`. Also, after the with block, and before checking the temporary directory is equal to the expected one, all occurences of the temporary directory path is replaced by `current_dir_replace_string`. If `None` is passed, no replacement is done.
+
+The function chooses an optional initial directory and a required expected directory as follow :
 
 #### Expected
 * If the `expected` keyword argument is provided, it's this directory that will be used.
@@ -96,6 +98,10 @@ The function choose an optional initial directory and a required expected direct
 * Else, if the `expected` keyword argument is **not** provided, the test path will be used as fallback, i.e. `currentModuleDirectory/TestCaseClassName/test_method/initial` if inside a TestCase class, else, `currentModuleDirectory/test_function/initial` if the test is a standalone function.
 * Else, the initial directory will be empty.
 * If the initial keyword argument is a Path, and this path does not exists, raises a FileNotFoundError.
+
+### (`pytest.fixture`) `expectdir(datapath=None, *, initial=None, expected=None, current_dir_replace_string="{{current_directory}}") -> contextmanager as outputDir:Path`
+
+Equivalent to expectDir, but with `"{{current_directory}}"` as default value for `current_dir_replace_string`.
 
 ### `cmpdir(candidate:Path, expected:Path) -> Tuple[result:bool, Tuple[candidate_only:list[Path], expected_only:list[Path], different:list[Path]]]`
 

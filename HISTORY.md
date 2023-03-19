@@ -1,3 +1,5 @@
+# 1.2.0
+  Added Replacement string for the current directory
 # 1.1.4
   Fix typo
 # 1.1.3
